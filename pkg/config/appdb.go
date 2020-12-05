@@ -40,7 +40,7 @@ const (
 func Connection() *pg.DB {
 	opts := &pg.Options{
 		User:     "potus",
-		Password: "whatisthepassword",
+		Password: "***********",
 		Addr:     ":5432",
 		Database: "go_test",
 	}
