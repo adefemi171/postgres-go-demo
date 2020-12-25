@@ -7,16 +7,12 @@ import (
 	controller "github.com/adefemi171/postgres-go/pkg/controller"
 
 	"github.com/go-pg/pg/v9"
+	"github.com/joho/godotenv"
 	
 )
 
-const (
-	host     = "localhost"
-	port     = 5432
-	user     = "postgres"
-	password = ""
-	dbname   = ""
-)
+
+
 
 // create DB connection
 
@@ -37,27 +33,29 @@ const (
 // 	// return db
 // }
 
+
 func Connection() *pg.DB {
-	opts := &pg.Options{
-		User:     "potus",
-		Password: "*******",
-		Addr:     ":5432",
-		Database: "go_test",
+
+	err := godotenv.Load(".env")
+
+	if err != nil {
+		log.Fatalf("Error loading .env file")
 	}
-	// db := pg.Connect(&pg.Options{
-	// 	User: "postgres",
-	// 	Password: "db_password",
-	// 	Addr: "localhost:5432",
-	// 	Database: "db_dbname",
-	// })
+
+	opts := &pg.Options{
+		User:     os.Getenv("User"),
+		Password: os.Getenv("Password"),
+		Addr:     os.Getenv("Addr"),
+		Database: os.Getenv("Database"),
+	}
 
 	var db *pg.DB = pg.Connect(opts)
 
 	if db == nil {
-		log.Printf("Connection failed")
+		log.Printf("Oops Connection failed")
 		os.Exit(100)
 	}
-	log.Printf("Connection Successful")
+	log.Printf("Yay, Connection Successful")
 	controller.CreateUserTable(db)
 	controller.InitiateDB(db)
 
