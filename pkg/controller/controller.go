@@ -36,7 +36,7 @@ func CreateUserTable(db *pg.DB) error {
 	return nil
 }
 
-// INITIALIZE DB CONNECTION (TO AVOID TOO MANY CONNECTION)
+// Db Connection initialization
 var dbConnect *pg.DB
 
 func InitiateDB(db *pg.DB) {
@@ -81,10 +81,10 @@ func CreateUser(c *gin.Context) {
 		UpdatedAt: time.Now(),
 	})
 	if insertError != nil {
-		log.Printf("Error while inserting new user into db, Reason: %v\n", insertError)
+		log.Printf("Error inserting new user into db: %v\n", insertError)
 		c.JSON(http.StatusInternalServerError, gin.H{
 			"status":  http.StatusInternalServerError,
-			"message": "Something went wrong",
+			"message": "Oops try again",
 		})
 		return
 	}
@@ -102,10 +102,10 @@ func GetUser(c *gin.Context) {
 	err := dbConnect.Model(&users).Select()
 
 	if err != nil {
-		log.Printf("Error while getting all users, Reason: %v\n", err)
+		log.Printf("Error while fetching all users, Reason: %v\n", err)
 		c.JSON(http.StatusInternalServerError, gin.H{
 			"status":  http.StatusInternalServerError,
-			"message": "Something went wrong",
+			"message": "Oops try again",
 		})
 		return
 	}
@@ -125,7 +125,7 @@ func GetUserByID(c *gin.Context) {
 	err := dbConnect.Select(user)
 
 	if err != nil {
-		log.Printf("Error while getting a single user, Reason: %v\n", err)
+		log.Printf("Error fetching a single user: %v\n", err)
 		c.JSON(http.StatusNotFound, gin.H{
 			"status":  http.StatusNotFound,
 			"message": "User not found",
@@ -155,10 +155,10 @@ func DeleteUser(c *gin.Context) {
 
 	err := dbConnect.Delete(user)
 	if err != nil {
-		log.Printf("Error while deleting a single user, Reason: %v\n", err)
+		log.Printf("Error deleting a single user: %v\n", err)
 		c.JSON(http.StatusInternalServerError, gin.H{
 			"status":  http.StatusInternalServerError,
-			"message": "Something went wrong",
+			"message": "Oops try again",
 		})
 		return
 	}
